@@ -39,10 +39,10 @@ def get_weather(my_city):
 
                 # 获取白天天气和夜间天气信息
                 weather_day = list(tds[2].stripped_strings)[0]
-                wind_day = list(tds[3].stripped_strings)[0] + list(tds[3].find('span', class_='conMidtabright').stripped_strings)[0]
-                high_temp = list(tds[4].stripped_strings)[0]
+                wind_day = list(tds[3].stripped_strings())[0] + list(tds[3].find('span', class_='conMidtabright').stripped_strings())[0]
+                high_temp = list(tds[4].stripped_strings())[0]
 
-                weather_night = list(tds[5].stripped_strings)[0]
+                weather_night = list(tds[5].stripped_strings())[0]
                 wind_night = list(tds[6].stripped_strings())[0] + list(tds[6].find('span', class_='conMidtabright').stripped_strings())[0]
                 low_temp = list(tds[7].stripped_strings())[0]
 
