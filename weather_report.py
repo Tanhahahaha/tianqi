@@ -56,6 +56,7 @@ def get_weather(my_city):
                     weather_typ = weather_typ_day if weather_typ_day != "-" else weather_type_night
                     wind = f"{wind_day}" if wind_day != "--" else f"{wind_night}"
                     return this_city, temp, weather_typ, wind
+    return None
 
 def get_access_token():
     # 获取access token的url
@@ -76,6 +77,10 @@ def get_daily_love():
     return daily_love
 
 def send_weather(access_token, weather):
+    if weather is None:
+        print("未能获取天气信息，不发送通知。")
+        return
+
     if "雨" not in weather[2]:
         print(f"天气不是雨天，不发送通知。天气信息：{weather[2]}")
         return
@@ -122,4 +127,4 @@ def weather_report(this_city):
     send_weather(access_token, weather)
 
 if __name__ == '__main__':
-    weather_report("宝安")
+    weather_report("深圳")
