@@ -16,11 +16,14 @@ def get_weather(my_city):
     url = "http://www.weather.com.cn/textFC/guangdong.shtml"
     resp = requests.get(url)
     text = resp.content.decode("utf-8")
-   
     soup = BeautifulSoup(text, 'html5lib')
     div_conMidtab = soup.find("div", class_="conMidtab")
     tables = div_conMidtab.find_all("table")
- print("原始数据内容：", tables[:1000])  # 仅打印前1000个字符，以免数据太长
+
+    # 打印每个 table 的数据
+    for table_index, table in enumerate(tables):
+        print(f"Table {table_index}:\n{table}")
+
     for table in tables:
         trs = table.find_all("tr")[2:]
         for tr in trs:
@@ -39,8 +42,8 @@ def get_weather(my_city):
                 wind_td_day_night = tds[-3]
 
                 high_temp = list(high_temp_td.stripped_strings)[0]
-                low_temp = list(low_temp_td.stripped_strings)[0]
-                weather_typ_day = list(weather_type_day_td.stripped_strings)[0]
+                low_temp = list(low_temp_td.stripped_strings())[0]
+                weather_typ_day = list(weather_type_day_td.stripped_strings())[0]
                 weather_type_night = list(weather_type_night_td.stripped_strings())[0]
 
                 wind_day = list(wind_td_day.stripped_strings())[0] + list(wind_td_day.stripped_strings())[1]
