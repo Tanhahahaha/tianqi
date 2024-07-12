@@ -24,8 +24,10 @@ def get_weather(my_city):
         trs = table.find_all("tr")[2:]
         for index, tr in enumerate(trs):
             tds = tr.find_all("td")
-            # 这里倒着数，因为每个省会的td结构跟其他不一样
-            city_td = tds[-8] if len(tds) > 8 else tds[-7]
+            if len(tds) < 8:  # 跳过不完整的数据行
+                continue
+
+            city_td = tds[-8]
             this_city = list(city_td.stripped_strings)[0]
             if this_city == my_city:
                 high_temp_td = tds[-5]
@@ -111,4 +113,4 @@ def weather_report(this_city):
     send_weather(access_token, weather)
 
 if __name__ == '__main__':
-    weather_report("宝安")
+    weather_report("深圳")
