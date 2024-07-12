@@ -22,12 +22,12 @@ def get_weather(my_city):
 
     for table in tables:
         trs = table.find_all("tr")[2:]
-        for index, tr in enumerate(trs):
+        for tr in trs:
             tds = tr.find_all("td")
             if len(tds) < 8:  # 跳过不完整的数据行
                 continue
 
-            city_td = tds[-8]
+            city_td = tds[0] if tds[0].get('class') == ['rowsPan'] else tds[1]
             this_city = list(city_td.stripped_strings)[0]
             if this_city == my_city:
                 high_temp_td = tds[-5]
@@ -43,7 +43,7 @@ def get_weather(my_city):
                 weather_type_night = list(weather_type_night_td.stripped_strings)[0]
 
                 wind_day = list(wind_td_day.stripped_strings)[0] + list(wind_td_day.stripped_strings)[1]
-                wind_night = list(wind_td_day_night.stripped_strings)[0] + list(wind_td_day_night.stripped_strings)[1]
+                wind_night = list(wind_td_day_night.stripped_strings())[0] + list(wind_td_day_night.stripped_strings())[1]
 
                 temp = f"{low_temp}——{high_temp}摄氏度" if high_temp != "-" else f"{low_temp}摄氏度"
                 weather_typ = weather_typ_day if weather_typ_day != "-" else weather_type_night
