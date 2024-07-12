@@ -20,6 +20,7 @@ def get_weather(my_city):
     div_conMidtab = soup.find("div", class_="conMidtab3")
     tables = div_conMidtab.find_all("table")
 
+    found_city = False
     for table in tables:
         trs = table.find_all("tr")
         for tr in trs:
@@ -33,6 +34,7 @@ def get_weather(my_city):
             print(f"当前城市: {this_city}")  # 调试信息
 
             if this_city == my_city:
+                found_city = True
                 print(f"找到城市: {this_city}")  # 调试信息
 
                 # 获取白天天气和夜间天气信息
@@ -41,8 +43,8 @@ def get_weather(my_city):
                 high_temp = list(tds[4].stripped_strings)[0]
 
                 weather_night = list(tds[5].stripped_strings)[0]
-                wind_night = list(tds[6].stripped_strings)[0] + list(tds[6].find('span', class_='conMidtabright').stripped_strings)[0]
-                low_temp = list(tds[7].stripped_strings)[0]
+                wind_night = list(tds[6].stripped_strings())[0] + list(tds[6].find('span', class_='conMidtabright').stripped_strings())[0]
+                low_temp = list(tds[7].stripped_strings())[0]
 
                 temp = f"{low_temp}——{high_temp}摄氏度" if high_temp != "-" else f"{low_temp}摄氏度"
                 weather_typ = weather_day if weather_day != "-" else weather_night
@@ -51,6 +53,9 @@ def get_weather(my_city):
                 print(f"天气信息: {this_city}, {temp}, {weather_typ}, {wind}")  # 调试信息
 
                 return this_city, temp, weather_typ, wind
+
+    if not found_city:
+        print(f"未找到城市: {my_city}")  # 调试信息
     return None
 
 def get_access_token():
