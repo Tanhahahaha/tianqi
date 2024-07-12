@@ -19,32 +19,24 @@ def get_weather(my_city):
     soup = BeautifulSoup(text, 'html5lib')
     div_conMidtab = soup.find("div", class_="conMidtab3")
     tables = div_conMidtab.find_all("table")
-
-    found_city = False
+    
+    weather_info = None
+    
     for table_index, table in enumerate(tables):
         print(f"Table {table_index}:")
         trs = table.find_all("tr")
         if len(trs) > 0:
-            first_td = trs[0].find_all("td")[0]
-            print(f"  First TD: {first_td.get_text(strip=True)}")  # 打印每个表格的第一个TD内容
             for tr_index, tr in enumerate(trs):
                 print(f"  Row {tr_index}:")
                 tds = tr.find_all("td")
-                for td_index, td in enumerate(tds):
-                    print(f"    TD {td_index}: {td.get_text(strip=True)}")
-
                 if len(tds) < 9:  # 跳过不完整的数据行
                     continue
-
                 # 获取区县名
                 city_td = tds[0] if 'rowsPan' in tds[0].get('class', []) else tds[1]
                 this_city = list(city_td.stripped_strings)[0]
                 print(f"    当前城市: {this_city}")  # 调试信息
 
                 if this_city == my_city:
-                    found_city = True
-                    print(f"找到城市: {this_city}")  # 调试信息
-
                     # 获取白天天气和夜间天气信息
                     weather_day = list(tds[2].stripped_strings())[0]
                     wind_day = list(tds[3].stripped_strings())[0] + list(tds[3].find('span', class_='conMidtabright').stripped_strings())[0]
@@ -59,12 +51,14 @@ def get_weather(my_city):
                     wind = f"{wind_day}" if wind_day != "--" else f"{wind_night}"
 
                     print(f"天气信息: {this_city}, {temp}, {weather_typ}, {wind}")  # 调试信息
+                    weather_info = (this_city, temp, weather_typ, wind)
+                    break  # 找到目标城市后跳出内层循环，但继续检查下一个table
 
-                    return this_city, temp, weather_typ, wind
-
-    if not found_city:
+    if not weather_info:
         print(f"未找到城市: {my_city}")  # 调试信息
-    return None
+        return None
+
+    return weather_info
 
 def get_access_token():
     url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={}&secret={}'.format(appID.strip(), appSecret.strip())
