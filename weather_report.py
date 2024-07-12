@@ -30,8 +30,11 @@ def get_weather(my_city):
             # 获取区县名
             city_td = tds[0] if tds[0].get('class') == ['rowsPan'] else tds[1]
             this_city = list(city_td.stripped_strings)[0]
+            print(f"当前城市: {this_city}")  # 调试信息
 
             if this_city == my_city:
+                print(f"找到城市: {this_city}")  # 调试信息
+
                 # 获取白天天气和夜间天气信息
                 weather_day = list(tds[2].stripped_strings)[0]
                 wind_day = list(tds[3].stripped_strings)[0] + list(tds[3].find('span', class_='conMidtabright').stripped_strings)[0]
@@ -44,6 +47,8 @@ def get_weather(my_city):
                 temp = f"{low_temp}——{high_temp}摄氏度" if high_temp != "-" else f"{low_temp}摄氏度"
                 weather_typ = weather_day if weather_day != "-" else weather_night
                 wind = f"{wind_day}" if wind_day != "--" else f"{wind_night}"
+
+                print(f"天气信息: {this_city}, {temp}, {weather_typ}, {wind}")  # 调试信息
 
                 return this_city, temp, weather_typ, wind
     return None
