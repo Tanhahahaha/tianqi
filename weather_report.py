@@ -16,11 +16,11 @@ def get_weather(my_city):
     url = "http://www.weather.com.cn/textFC/guangdong.shtml"
     resp = requests.get(url)
     text = resp.content.decode("utf-8")
-    print("原始数据内容：", text[:1000])  # 仅打印前1000个字符，以免数据太长
+   
     soup = BeautifulSoup(text, 'html5lib')
     div_conMidtab = soup.find("div", class_="conMidtab")
     tables = div_conMidtab.find_all("table")
-
+ print("原始数据内容：", tables[:1000])  # 仅打印前1000个字符，以免数据太长
     for table in tables:
         trs = table.find_all("tr")[2:]
         for tr in trs:
