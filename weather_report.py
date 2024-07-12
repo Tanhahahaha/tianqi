@@ -29,7 +29,7 @@ def get_weather(my_city):
                 continue
 
             # 获取区县名
-            city_td = tds[0] if tds[0].get('class') == ['rowsPan'] else tds[1]
+            city_td = tds[0] if 'rowsPan' in tds[0].get('class', []) else tds[1]
             this_city = list(city_td.stripped_strings)[0]
             print(f"当前城市: {this_city}")  # 调试信息
 
