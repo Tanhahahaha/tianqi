@@ -57,7 +57,6 @@ def get_weather(my_city):
                     wind = f"{wind_day}" if wind_day != "--" else f"{wind_night}"
                     return this_city, temp, weather_typ, wind
 
-
 def get_access_token():
     # 获取access token的url
     url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={}&secret={}' \
@@ -66,7 +65,6 @@ def get_access_token():
     print(response)
     access_token = response.get('access_token')
     return access_token
-
 
 def get_daily_love():
     # 每日一句情话
@@ -77,12 +75,10 @@ def get_daily_love():
     daily_love = sentence
     return daily_love
 
-
 def send_weather(access_token, weather):
-    # touser 就是 openID
-    # template_id 就是模板ID
-    # url 就是点击模板跳转的url
-    # data就按这种格式写，time和text就是之前{{time.DATA}}中的那个time，value就是你要替换DATA的值
+    if "雨" not in weather[2]:
+        print(f"天气不是雨天，不发送通知。天气信息：{weather[2]}")
+        return
 
     import datetime
     today = datetime.date.today()
@@ -116,8 +112,6 @@ def send_weather(access_token, weather):
     url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}'.format(access_token)
     print(requests.post(url, json.dumps(body)).text)
 
-
-
 def weather_report(this_city):
     # 1.获取access_token
     access_token = get_access_token()
@@ -126,8 +120,6 @@ def weather_report(this_city):
     print(f"天气信息： {weather}")
     # 3. 发送消息
     send_weather(access_token, weather)
-
-
 
 if __name__ == '__main__':
     weather_report("宝安")
