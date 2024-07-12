@@ -17,41 +17,34 @@ def get_weather(my_city):
     resp = requests.get(url)
     text = resp.content.decode("utf-8")
     soup = BeautifulSoup(text, 'html5lib')
-    div_conMidtab = soup.find("div", class_="conMidtab")
+    div_conMidtab = soup.find("div", class_="conMidtab3")
     tables = div_conMidtab.find_all("table")
 
-    # 打印每个 table 的数据
-    for table_index, table in enumerate(tables):
-        print(f"Table {table_index}:\n{table}")
-
     for table in tables:
-        trs = table.find_all("tr")[2:]
+        trs = table.find_all("tr")
         for tr in trs:
             tds = tr.find_all("td")
-            if len(tds) < 8:  # 跳过不完整的数据行
+            if len(tds) < 9:  # 跳过不完整的数据行
                 continue
 
+            # 获取区县名
             city_td = tds[0] if tds[0].get('class') == ['rowsPan'] else tds[1]
             this_city = list(city_td.stripped_strings)[0]
+
             if this_city == my_city:
-                high_temp_td = tds[-5]
-                low_temp_td = tds[-2]
-                weather_type_day_td = tds[-7]
-                weather_type_night_td = tds[-4]
-                wind_td_day = tds[-6]
-                wind_td_day_night = tds[-3]
+                # 获取白天天气和夜间天气信息
+                weather_day = list(tds[2].stripped_strings)[0]
+                wind_day = list(tds[3].stripped_strings)[0] + list(tds[3].find('span', class_='conMidtabright').stripped_strings)[0]
+                high_temp = list(tds[4].stripped_strings)[0]
 
-                high_temp = list(high_temp_td.stripped_strings)[0]
-                low_temp = list(low_temp_td.stripped_strings())[0]
-                weather_typ_day = list(weather_type_day_td.stripped_strings())[0]
-                weather_type_night = list(weather_type_night_td.stripped_strings())[0]
-
-                wind_day = list(wind_td_day.stripped_strings())[0] + list(wind_td_day.stripped_strings())[1]
-                wind_night = list(wind_td_day_night.stripped_strings())[0] + list(wind_td_day_night.stripped_strings())[1]
+                weather_night = list(tds[5].stripped_strings)[0]
+                wind_night = list(tds[6].stripped_strings)[0] + list(tds[6].find('span', class_='conMidtabright').stripped_strings)[0]
+                low_temp = list(tds[7].stripped_strings)[0]
 
                 temp = f"{low_temp}——{high_temp}摄氏度" if high_temp != "-" else f"{low_temp}摄氏度"
-                weather_typ = weather_typ_day if weather_typ_day != "-" else weather_type_night
+                weather_typ = weather_day if weather_day != "-" else weather_night
                 wind = f"{wind_day}" if wind_day != "--" else f"{wind_night}"
+
                 return this_city, temp, weather_typ, wind
     return None
 
@@ -117,4 +110,4 @@ def weather_report(this_city):
     send_weather(access_token, weather)
 
 if __name__ == '__main__':
-    weather_report("深圳")
+    weather_report("宝安")
