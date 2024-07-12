@@ -21,17 +21,22 @@ def get_weather(my_city):
     tables = div_conMidtab.find_all("table")
 
     found_city = False
-    for table in tables:
+    for table_index, table in enumerate(tables):
+        print(f"Table {table_index}:")
         trs = table.find_all("tr")
-        for tr in trs:
+        for tr_index, tr in enumerate(trs):
+            print(f"  Row {tr_index}:")
             tds = tr.find_all("td")
+            for td_index, td in enumerate(tds):
+                print(f"    TD {td_index}: {td.get_text(strip=True)}")
+
             if len(tds) < 9:  # 跳过不完整的数据行
                 continue
 
             # 获取区县名
             city_td = tds[0] if 'rowsPan' in tds[0].get('class', []) else tds[1]
             this_city = list(city_td.stripped_strings)[0]
-            print(f"当前城市: {this_city}")  # 调试信息
+            print(f"    当前城市: {this_city}")  # 调试信息
 
             if this_city == my_city:
                 found_city = True
