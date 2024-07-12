@@ -43,7 +43,7 @@ def get_weather(my_city):
                 print(f"找到城市: {this_city}")  # 调试信息
 
                 # 获取白天天气和夜间天气信息
-                weather_day = list(tds[2].stripped_strings)[0]
+                weather_day = list(tds[2].stripped_strings())[0]
                 wind_day = list(tds[3].stripped_strings())[0] + list(tds[3].find('span', class_='conMidtabright').stripped_strings())[0]
                 high_temp = list(tds[4].stripped_strings())[0]
 
